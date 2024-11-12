@@ -12,7 +12,7 @@ typedef struct User{
     int user_id;
     char name[MAX_NAME_LEN];
     char email[MAX_EMAIL_LEN];
-    struct User* friends[MAX_USERS];
+    struct User* friends[MAX_USERS]; //see if changing to to linked lists would help memory out later
     int friend_count;
 } User;
 
@@ -105,4 +105,100 @@ User* create_user(const char* name, const char* email){
 
     printf("User created: ID=%d, Name=%s, Email=%s\n", new_user->user_id, new_user->name, new_user->email);
     return new_user;
+}
+
+void add_friend(User* user1, User* user2){
+    if(user1 == NULL || user2 == NULL){
+        printf("One or both users do not exist\n");
+        return;
+    }
+
+    if(user1==user2){
+        printf("User cannot add oneself\n");
+        return;
+    }
+
+    for(int i = 0; i< user1->friend_count; i++){//check if users are already firends
+        if(user1->friends[i] == user2){
+            printf("Users are already friends\n");
+            return;
+        }
+    }
+
+    if(user1->friend_count >= MAX_USERS){
+        printf("User '%s' friends list is full\n", user1->name);
+        return;
+    }
+
+    if(user2->friend_count >= MAX_USERS){
+        printf("User '%s' friends list is full\n", user2->name);
+        return;
+    }
+
+    user1->friends[user1->friend_count++] = user2;
+    user2->friends[user2->friend_count++] = user1;
+    printf("'%s' and '%s' are now friends\n", user1->name, user2->name);
+}
+
+void delete_friend(User* user1, User* user2){
+    if(user1 == NULL || user2 == NULL){
+        printf("One or both users do not exist\n");
+        return;
+    }
+
+    if(user1==user2){
+        printf("User cannot delete oneself\n");
+        return;
+    }
+
+    //check if users are actually friends prior to deletion
+    int is_friend = 0;
+    for (int i = 0; i < user1->friend_count; i++) {
+        if (user1->friends[i] == user2) {
+            is_friend = 1;
+            break;
+        }
+    }
+
+    if (!is_friend) {
+        printf("Error: %s and %s are not friends.\n", user1->name, user2->name);
+        return;
+    }
+
+
+    //deletion from user1s friends list
+    int index = -1;
+    for(int i = 0; i< user1->friend_count; i++){
+        if(user1->friends[i] == user2){
+            index = i;
+            break;
+        }
+    }
+
+    if(index != -1){
+        for (int i = index; i < user1->friend_count - 1; i++) {
+            user1->friends[i] = user1->friends[i + 1];
+        }
+        user1->friends[user1->friend_count - 1] = NULL;
+        user1->friend_count--;//clear last pointer and reduce friend count of user1
+    }
+
+    //deletion from user2s friends list
+    index = -1;
+    for (int i = 0; i < user2->friend_count; i++) {
+        if (user2->friends[i] == user1) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index != -1) {
+        for (int i = index; i < user2->friend_count - 1; i++) {//shifts elements of array to left to close gap
+            user2->friends[i] = user2->friends[i + 1];
+        }
+        user2->friends[user2->friend_count - 1] = NULL;
+        user2->friend_count--;//clear last pointer and reduce friend count of user2
+    }
+
+    printf("'%s' and '%s' are no longer friends\n", user1->name, user2->name);
 }
