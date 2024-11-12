@@ -1,0 +1,14 @@
+[
+{
+  "directory": "C:/Users/user/projects/278assignment/ASSIGNMENT 2024/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/assignment.dir/includes_C.rsp -g -o CMakeFiles\\assignment.dir\\main.c.obj -c \"C:\\Users\\user\\projects\\278assignment\\ASSIGNMENT 2024\\main.c\"",
+  "file": "C:/Users/user/projects/278assignment/ASSIGNMENT 2024/main.c",
+  "output": "CMakeFiles/assignment.dir/main.c.obj"
+},
+{
+  "directory": "C:/Users/user/projects/278assignment/ASSIGNMENT 2024/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\gcc.exe  @CMakeFiles/assignment.dir/includes_C.rsp -g -o CMakeFiles\\assignment.dir\\functions.c.obj -c \"C:\\Users\\user\\projects\\278assignment\\ASSIGNMENT 2024\\functions.c\"",
+  "file": "C:/Users/user/projects/278assignment/ASSIGNMENT 2024/functions.c",
+  "output": "CMakeFiles/assignment.dir/functions.c.obj"
+}
+]
