@@ -6,6 +6,7 @@
 #define MAX_USERS 10000
 #define MAX_NAME_LEN 50
 #define MAX_EMAIL_LEN 50
+#define HASH_TABLE_SIZE 10007
 
 //define user struct
 typedef struct User{
@@ -16,7 +17,17 @@ typedef struct User{
     int friend_count;
 } User;
 
-//globals
+//create node struct for hashing and separate chaining
+typedef struct Node{
+    User* user;
+    struct Node* next;
+}Node;
+
+//create hash tables for storing info
+Node* nameTable[HASH_TABLE_SIZE];
+Node* emailTable[HASH_TABLE_SIZE];
+
+//array for ordered traversal in prints
 User* users[MAX_USERS];
 int user_count = 0;
 int next_user_id = 1;
@@ -46,6 +57,26 @@ void add_like(Post* post, User* user); // user is the individual who liked the p
 void display_feed(User* user1);
 
 // WRITE FUNCTIONS BELOW
+unsigned int hashFunc(const char* str){
+    unsigned int hash = 0;
+    while (*str){
+        hash = (hash * 31) + (*str++);
+    }
+    return hash % HASH_TABLE_SIZE;
+}
+
+void insert(Node** hashTable, User* user, const char* key){
+    unsigned int index = hashFunc(key);
+    Node* new_node = (Node*)malloc(sizeof(Node));
+    if(!new_node){
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
+    new_node->user = user;
+    new_node->next = hashTable[index];
+    hashTable[index] = new_node;
+}
+
 int unique_name(const char* name){
     for(int i = 0; i < user_count; i++){
         if(strcmp(users[i]->name, name) == 0 ){
@@ -249,4 +280,8 @@ void delete_user(User* user){
 
     printf("'%s' is no longer a user\n", user->name);
     free(user); //free pointer taken up by deleted user
+}
+
+void print_users(){
+    
 }
