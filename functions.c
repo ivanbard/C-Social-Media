@@ -230,6 +230,23 @@ void delete_user(User* user){
         }
     }
 
-    
+    //delete user from the users array
+    int index = -1;
+    for(int i = 0; i<user_count; i++){
+        if(users[i] == user){
+            index = i;
+            break;
+        }
+    }
 
+    if(index != -1){
+        for(int i = index; i < user_count - 1; i++){
+            users[i] = users[i+1];
+        }
+        users[user_count - 1] = NULL;
+        user_count--;
+    }
+
+    printf("'%s' is no longer a user\n", user->name);
+    free(user); //free pointer taken up by deleted user
 }
