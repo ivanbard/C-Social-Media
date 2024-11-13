@@ -202,3 +202,34 @@ void delete_friend(User* user1, User* user2){
 
     printf("'%s' and '%s' are no longer friends\n", user1->name, user2->name);
 }
+
+void delete_user(User* user){
+    if(user == NULL){
+        printf("User does not exist\n");
+        return;
+    }
+
+    //find user in everyones friends lists and delete them from it
+    for(int i = 0; i < user->friend_count; i++){
+        User* friend_user = user->friends[i];
+        
+        int index = -1;
+        for(int j = 0; j <friend_user->friend_count;j++){
+            if(friend_user->friends[j] == user){
+                index = j;
+                break;
+            }
+        }
+
+        if (index != -1) {
+            for (int j = index; j < friend_user->friend_count - 1; j++) {
+                friend_user->friends[j] = friend_user->friends[j + 1];
+            }
+            friend_user->friends[friend_user->friend_count - 1] = NULL;
+            friend_user->friend_count--;
+        }
+    }
+
+    
+
+}
