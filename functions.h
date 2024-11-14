@@ -2,8 +2,17 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#define MAX_USERS 10000
+#define MAX_NAME_LEN 50
+#define MAX_EMAIL_LEN 50
+#define HASH_TABLE_SIZE 10007
+
 typedef struct {
-    // add attributes
+    int user_id;
+    char name[MAX_NAME_LEN];
+    char email[MAX_EMAIL_LEN];
+    struct User* friends[MAX_USERS]; //see if changing to to linked lists would help memory out later
+    int friend_count;
 } User;
 
 typedef struct {

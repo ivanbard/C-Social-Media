@@ -17,79 +17,79 @@ void callFunction(char *funcName, char **args, int argCount) {
         }
     } 
     
-    // UNCOMMENT ME AFTER YOU HAVE WRITTEN MY FUNCTION
+    //UNCOMMENT ME AFTER YOU HAVE WRITTEN MY FUNCTION
 
-    // else if (strcmp(funcName, "create_user") == 0) {
-    //     if (argCount >= 2) {
-    //         create_user(args[0], args[1]);
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "create_user") == 0) {
+        if (argCount >= 2) {
+            create_user(args[0], args[1]);
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
-    // else if (strcmp(funcName, "print_users") == 0) {
-    //     if (argCount >= 0) {
-    //         print_users();
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "print_users") == 0) {
+        if (argCount >= 0) {
+            print_users();
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
-    // else if (strcmp(funcName, "search_user_by_name") == 0) {
-    //     if (argCount >= 1) {
-    //         search_user_by_name(args[0]);
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "search_user_by_name") == 0) {
+        if (argCount >= 1) {
+            search_user_by_name(args[0]);
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
-    // else if (strcmp(funcName, "search_user_by_email") == 0) {
-    //     if (argCount >= 1) {
-    //         search_user_by_email(args[0]);
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "search_user_by_email") == 0) {
+        if (argCount >= 1) {
+            search_user_by_email(args[0]);
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
-    // else if (strcmp(funcName, "delete_user") == 0) {
-    //     if (argCount >= 1) {
-    //         delete_user(search_user_by_name(args[0]));
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "delete_user") == 0) {
+        if (argCount >= 1) {
+            delete_user(search_user_by_name(args[0]));
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
-    // else if (strcmp(funcName, "change_user_name") == 0) {
-    //     if (argCount >= 2) {
-    //         change_user_name(search_user_by_name(args[0]), args[1]);
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "change_user_name") == 0) {
+        if (argCount >= 2) {
+            change_user_name(search_user_by_name(args[0]), args[1]);
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
-    // else if (strcmp(funcName, "change_user_email") == 0) {
-    //     if (argCount >= 2) {
-    //         change_user_email(search_user_by_name(args[0]), args[1]);
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "change_user_email") == 0) {
+        if (argCount >= 2) {
+            change_user_email(search_user_by_name(args[0]), args[1]);
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
-    // else if (strcmp(funcName, "add_friend") == 0) {
-    //     if (argCount >= 2) {
-    //         add_friend(search_user_by_name(args[0]), search_user_by_name(args[1]));
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "add_friend") == 0) {
+        if (argCount >= 2) {
+            add_friend(search_user_by_name(args[0]), search_user_by_name(args[1]));
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
-    // else if (strcmp(funcName, "delete_friend") == 0) {
-    //     if (argCount >= 2) {
-    //         delete_friend(search_user_by_name(args[0]), search_user_by_name(args[1]));
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "delete_friend") == 0) {
+        if (argCount >= 2) {
+            delete_friend(search_user_by_name(args[0]), search_user_by_name(args[1]));
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
     // else if (strcmp(funcName, "print_mutual_friends") == 0) {
     //     if (argCount >= 2) {

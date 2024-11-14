@@ -8,15 +8,6 @@
 #define MAX_EMAIL_LEN 50
 #define HASH_TABLE_SIZE 10007
 
-//define user struct
-typedef struct User{
-    int user_id;
-    char name[MAX_NAME_LEN];
-    char email[MAX_EMAIL_LEN];
-    struct User* friends[MAX_USERS]; //see if changing to to linked lists would help memory out later
-    int friend_count;
-} User;
-
 //create node struct for hashing and separate chaining
 typedef struct Node{
     User* user;
@@ -130,9 +121,9 @@ User* create_user(const char* name, const char* email){
     }
 
     new_user->user_id=next_user_id++;
-    strncopy(new_user->name, name, MAX_NAME_LEN - 1);
+    strncpy(new_user->name, name, MAX_NAME_LEN - 1);
     new_user->name[MAX_NAME_LEN - 1] = '\0';
-    strncopy(new_user->email, email, MAX_EMAIL_LEN - 1);
+    strncpy(new_user->email, email, MAX_EMAIL_LEN - 1);
     new_user->email[MAX_EMAIL_LEN - 1] = '\0';
     new_user->friend_count = 0;
     for(int i = 0; i < MAX_USERS; i++){
@@ -446,3 +437,6 @@ void change_user_email(User* user, char* new_email){
     printf("User changed their email to '%s'\n", user->email);
 }
 
+void print_friends(User* user){
+
+}
