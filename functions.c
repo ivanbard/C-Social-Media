@@ -270,9 +270,48 @@ void delete_user(User* user){
         }
     }
 
-    //delete user from the users array
+    //remove user from hash tables
+    //for name table
+    unsigned int name_index = hashFunc(user->name);
+    Node* current = nameTable[name_index];
+    Node* prev = NULL;
+    while(current){
+        if(current->user == user){
+            if(prev){
+                prev->next = current->next;
+            }
+            else{
+                nameTable[name_index] = current->next;
+            }
+            free(current);
+            break;
+        }
+        prev = current;
+        current = current->next;
+    }
+    
+    //for email table
+    unsigned int email_index = hashFunc(user->email);
+    current = emailTable[email_index];
+    prev = NULL;
+    while(current){
+        if(current->user == user){
+            if(prev){
+                prev->next = current->next;
+            }
+            else{
+                emailTable[email_index] = current->next;
+            }
+            free(current);
+            break;
+        }
+        prev = current;
+        current = current->next;
+    }
+
+    //remove user from the global array
     int index = -1;
-    for(int i = 0; i<user_count; i++){
+    for(int i = 0; i < user_count; i++){
         if(users[i] == user){
             index = i;
             break;
