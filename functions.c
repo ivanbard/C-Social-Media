@@ -330,6 +330,35 @@ void delete_user(User* user){
     free(user); //free pointer taken up by deleted user
 }
 
-void print_users(){
-    
+//helper for quick sort 
+int compareUsers(const void* a, const void* b){
+    User* userA = *(User**)a;
+    User* userB = *(User**)b;
+    return strcmp(userA->name, userB->name);
 }
+
+void print_users(){
+    if(user_count == 0){
+        printf("No users exist\n");
+        return;
+    }
+
+    User** sorted = (User**)malloc(user_count * sizeof(User*));
+    if(sorted == NULL){
+        printf("Memory allocation failed\n");
+        return;
+    }
+    mempcpy(sorted, users, user_count * sizeof(User*));
+
+    //alphabetically sort the copied array for printing
+    qsort(sorted, user_count, sizeof(User*), compareUsers);
+    for(int i = 0; i < user_count; i++){
+        printf("%s", sorted[i]->name);
+        if(i<user_count - 1){
+            printf(",");
+        }
+    }
+    printf("\n");
+    free(sorted); //empty sorted array pointer for memory optimization
+}
+
