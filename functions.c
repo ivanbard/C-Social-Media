@@ -362,3 +362,87 @@ void print_users(){
     free(sorted); //empty sorted array pointer for memory optimization
 }
 
+void change_user_name(User* user, char* new_name){
+    if(user == NULL || new_name == NULL){
+        printf("Error! User or new name do not exist\n");
+        return;
+    }
+
+    if(strlen(new_name) >= MAX_NAME_LEN){
+        printf("Error! New name exceeds length limit\n");
+        return;
+    }
+
+    if(search_user_by_name(new_name)){
+        printf("Error! '%s' is already taken\n", new_name);
+        return;
+    }
+
+    unsigned int oldNameIndex = hashFunc(user->name);
+    Node* current = nameTable[oldNameIndex];
+    Node* prev = NULL;
+
+    while(current){
+        if(current->user == user){
+            if(prev){
+                prev->next = current->next;
+            }
+            else{
+                nameTable[oldNameIndex] = current->next;
+            }
+            free(current);
+            break;
+        }
+        prev = current;
+        current = current->next;
+    }
+
+    strncpy(user->name, new_name, MAX_NAME_LEN-1);
+    user->name[MAX_NAME_LEN - 1] = '\0';
+    insert(nameTable, user, new_name);
+
+    printf("User changed their name to '%s'\n", user->name);
+}
+
+void change_user_email(User* user, char* new_email){
+    if(user == NULL || new_email == NULL){
+        printf("Error! User or new email do not exist\n");
+        return;
+    }
+
+    if(strlen(new_email) >= MAX_EMAIL_LEN){
+        printf("Error! New email exceeds length limit\n");
+        return;
+    }
+
+    if(search_user_by_email(new_email)){
+        printf("Error! '%s' is already taken\n", new_email);
+        return;
+    }
+
+    unsigned int oldEmailIndex = hashFunc(user->email);
+    Node* current = emailTable[oldEmailIndex];
+    Node* prev = NULL;    
+
+    while(current){
+        if(current->user == user){
+            if(prev){
+                prev->next = current->next;
+            }
+            else{
+                emailTable[oldEmailIndex] = current->next;
+            }
+            free(current);
+            break;
+        }
+        prev = current;
+        current = current->next;
+    }
+
+    strncpy(user->email, new_email, MAX_EMAIL_LEN-1);
+    user->email[MAX_EMAIL_LEN - 1] = '\0';
+    insert(emailTable, user, new_email);
+
+    printf("User changed their email to '%s'\n", user->email);
+}
+
