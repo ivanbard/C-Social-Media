@@ -77,23 +77,31 @@ void insert(Node** hashTable, User* user, const char* key){
     hashTable[index] = new_node;
 }
 
-int unique_name(const char* name){
-    for(int i = 0; i < user_count; i++){
-        if(strcmp(users[i]->name, name) == 0 ){
-            return 0; // name is not unique
+//implement search by user and email to simplify user creation using hastables
+User* search_user_by_name(const char* name){
+    unsigned int index = hashFunc(name);
+    Node* current = nameTable[index];
+    while(current){
+        if(strcmp(current->user->name, name) == 0){
+            return current->user;
         }
+        current  = current->next;
     }
-    return 1; // name is unique
+    return NULL;
 }
 
-int unique_email(const char* email){
-    for(int i = 0; i < user_count; i++){
-        if(strcmp(users[i]->email, email) == 0 ){
-            return 0; // email is not unique
+User* search_user_by_email(const char* email){
+    unsigned int index = hashFunc(email);
+    Node* current = emailTable[index];
+    while(current){
+        if(strcmp(current->user->email, email) == 0){
+            return current->user;
         }
+        current  = current->next;
     }
-    return 1; // email is unique
+    return NULL; //if not found
 }
+
 
 User* create_user(const char* name, const char* email){
     if(user_count >= MAX_USERS){
