@@ -102,7 +102,6 @@ User* search_user_by_email(const char* email){
     return NULL; //if not found
 }
 
-
 User* create_user(const char* name, const char* email){
     if(user_count >= MAX_USERS){
         printf("Error! Max number of users reached.\n");
@@ -114,12 +113,12 @@ User* create_user(const char* name, const char* email){
         return NULL;
     }
 
-    if(!unique_name(name)){
+    if(search_user_by_name(name)){
         printf("Error! Name '%s' is taken.\n", name);
         return NULL;
     }
 
-    if(!unique_email(email)){
+    if(search_user_by_email(email)){
         printf("Error! Email '%s' is taken.\n", email);
         return NULL;
     }
@@ -140,7 +139,9 @@ User* create_user(const char* name, const char* email){
         new_user->friends[i] = NULL; //make sure new users friends list is empty
     }
 
-    users[user_count++] = new_user; //put that new user into the users array
+    insert(nameTable, new_user, name); //store new users details in the hash tables
+    insert(emailTable, new_user, email); 
+    users[user_count++] = new_user; //add the new user to the global array and add new spot in array for them
 
     printf("User created: ID=%d, Name=%s, Email=%s\n", new_user->user_id, new_user->name, new_user->email);
     return new_user;
