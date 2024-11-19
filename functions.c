@@ -339,7 +339,7 @@ void print_users(){
         printf("Memory allocation failed\n");
         return;
     }
-    mempcpy(sorted, users, user_count * sizeof(User*));
+    memcpy(sorted, users, user_count * sizeof(User*));
 
     //alphabetically sort the copied array for printing
     qsort(sorted, user_count, sizeof(User*), compareUsers);
@@ -453,7 +453,7 @@ void print_friends(User* user){
         printf("Memory allocation failed\n");
         return;
     }
-    mempcpy(sorted, user->friends, user->friend_count * sizeof(User*));
+    memcpy(sorted, user->friends, user->friend_count * sizeof(User*));
 
     //alphabetically sort the copied array for printing
     qsort(sorted, user->friend_count, sizeof(User*), compareUsers);

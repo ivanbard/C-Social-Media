@@ -35,6 +35,14 @@ void callFunction(char *funcName, char **args, int argCount) {
         }
     } 
 
+    else if (strcmp(funcName, "print_friends") == 0) {
+        if (argCount >= 1) {
+            print_friends(search_user_by_name(args[0]));
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
+
     else if (strcmp(funcName, "search_user_by_name") == 0) {
         if (argCount >= 1) {
             search_user_by_name(args[0]);
