@@ -438,5 +438,31 @@ void change_user_email(User* user, char* new_email){
 }
 
 void print_friends(User* user){
+    if(user == NULL){
+        printf("Error! User does not exist\n");
+        return;
+    }
 
+    if(user->friend_count == 0){
+        printf("'%s' has no friends", user->name);
+        return;
+    }
+
+    User** sorted = (User**)malloc(user->friend_count * sizeof(User*));
+    if(sorted == NULL){
+        printf("Memory allocation failed\n");
+        return;
+    }
+    mempcpy(sorted, user->friends, user->friend_count * sizeof(User*));
+
+    //alphabetically sort the copied array for printing
+    qsort(sorted, user->friend_count, sizeof(User*), compareUsers);
+    for(int i = 0; i < user->friend_count; i++){
+        printf("%s", sorted[i]->name);
+        if(i<user->friend_count - 1){
+            printf(",");
+        }
+    }
+    printf("\n");
+    free(sorted); //empty sorted array pointer for memory optimization
 }
