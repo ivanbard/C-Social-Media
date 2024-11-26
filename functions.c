@@ -466,3 +466,66 @@ void print_friends(User* user){
     printf("\n");
     free(sorted); //empty sorted array pointer for memory optimization
 }
+
+User** mutual_friends(User* user1, User* user2){
+    if(user1 == NULL || user2 == NULL){
+        printf("One or both users do not exist\n");
+        return NULL;
+    }
+
+    //find max amount of mutual friends to allocate array
+    int maxFriends = (user1->friend_count < user2->friend_count) ? user1->friend_count : user2->friend_count;
+    User** mutual = (User**)malloc((maxFriends + 1) * sizeof(User*));
+    if (mutual == NULL){
+        printf("Memory allocation failed\n");
+        return NULL;
+    }
+
+    int mutual_count = 0;
+    for(int i = 0; i < user1->friend_count; i++){
+        User* friend1 = user1->friends[i]; //take x person on user 1 friends list
+        for(int j = 0; j < user2->friend_count; j++){
+            if(user2->friends[j] == friend1){ //check if x person is also on user 2 friends list
+                mutual[mutual_count++] = friend1; //if they are, add them to the mutual friends array
+                break;
+            }
+        }
+    }
+
+    mutual[mutual_count] = NULL;
+    return mutual;
+}
+
+void print_mutual_friends(User** friends){
+    if(friends == NULL){
+        printf("No mutual friends\n");
+        return;
+    }
+
+    int count = 0;
+    while(friends[count] != NULL){
+        count++;
+    }
+
+    if(count == 0){
+        printf("No mutual friends\n");
+        return;
+    }
+
+    User** sorted = (User**)malloc(count * sizeof(User*));
+    if (sorted==NULL){
+        printf("Memory allocation failed\n");
+        return;
+    }
+
+    memcpy(sorted, friends, count*sizeof(User*));
+    qsort(sorted, count, sizeof(User*), compareUsers);
+    for(int i = 0; i < count; i++){
+        printf("%s", sorted[i]->name);
+        if(i < count-1){
+            printf(", ");
+        }
+    }
+    printf("\n");
+    free(sorted);
+}

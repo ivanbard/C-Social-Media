@@ -99,13 +99,13 @@ void callFunction(char *funcName, char **args, int argCount) {
         }
     } 
 
-    // else if (strcmp(funcName, "print_mutual_friends") == 0) {
-    //     if (argCount >= 2) {
-    //         print_mutual_friends(mutual_friends(search_user_by_name(args[0]), search_user_by_name(args[1])));
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "print_mutual_friends") == 0) {
+        if (argCount >= 2) {
+            print_mutual_friends(mutual_friends(search_user_by_name(args[0]), search_user_by_name(args[1])));
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
     // else if (strcmp(funcName, "create_message") == 0) {
     //     if (argCount >= 3) {
