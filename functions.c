@@ -14,14 +14,23 @@ typedef struct Node{
     struct Node* next;
 }Node;
 
+typedef struct chatNode{ //fucking more nodes but now for chat linked list
+    Chat* chat;
+    struct chatNode* next;
+}chatNode;
+
 //create hash tables for storing info
 Node* nameTable[HASH_TABLE_SIZE];
 Node* emailTable[HASH_TABLE_SIZE];
+chatNode* chatTable[HASH_TABLE_SIZE];
 
 //array for ordered traversal in prints
 User* users[MAX_USERS];
 int user_count = 0;
 int next_user_id = 1;
+Chat* chats[MAX_CHATS];
+int chat_count = 0;
+int next_message_id = 1;
 
 // Utility function to test parser
 void testingParser(int arg1, char *arg2) {
@@ -51,8 +60,19 @@ void display_feed(User* user1);
 unsigned int hashFunc(const char* str){
     unsigned int hash = 0;
     while (*str){
-        hash = (hash * 31) + (*str++);
+        hash = (hash * 31) + (*str++); //prime number to reduce collisions
     }
+    return hash % HASH_TABLE_SIZE;
+}
+
+unsigned int chatHashFunc(int user1_id, int user2_id){
+    if(user1_id > user2_id){ //this is to make sure that no matter if user1 or user2 is first the hash will be the same
+        int temp = user1_id;
+        user1_id = user2_id;
+        user2_id = temp;
+    }
+
+    unsigned long hash = (unsigned long)user1_id * 31 + user2_id;
     return hash % HASH_TABLE_SIZE;
 }
 
@@ -528,4 +548,56 @@ void print_mutual_friends(User** friends){
     }
     printf("\n");
     free(sorted);
+}
+
+Chat* findChat(User* user1, User* user2){ //helper function to find chat between x and y users
+    if(user1 == NULL || user2 == NULL){
+        printf("One or both users do not exist\n");
+        return NULL;
+    }
+    unsigned int index = chatHashFunc(user1->user_id, user2->user_id);
+    chatNode* current = chatTable[index];
+    while(current){ //scroll through cursedly long linked list to find chat between those users
+        if((current->chat->user1 == user1 && current->chat->user2 == user2) || (current->chat->user1 == user2 && current->chat->user2 == user1)){
+            return current->chat;
+        }
+        current = current->next;
+    }
+
+    if(chat_count > MAX_CHATS){
+        printf("Max number of chats reached\n");
+        return NULL;
+    }
+
+    Chat* new_chat = (Chat*)malloc(sizeof(Chat));
+    if(new_chat == NULL){
+        printf("Memory allocation failed\n");
+        return NULL;
+    }
+
+    new_chat->user1 = user1;
+    new_chat->user2 = user2;
+    new_chat->message_count = 0;
+    new_chat->start = 0;
+    new_chat->end = 0;
+    for(int i = 0; i < MAX_MESSAGES; i++){
+        new_chat->messages[i] = NULL;
+    }
+
+    chatNode* new_node = (chatNode*)malloc(sizeof(chatNode));
+    if(new_node == NULL){
+        printf("Memory allocation failed\n");
+        return NULL;
+    }
+    new_node->chat = new_chat;
+    new_node->next = chatTable[index]; //adding chat to hash table
+    chatTable[index] = new_node;
+    chats[chat_count++] = new_chat; //adding chat to global arry
+    return new_chat;
+}
+
+
+
+Message* create_message(User* sender, User* receiver, const char* content){
+    
 }

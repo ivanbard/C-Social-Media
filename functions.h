@@ -6,6 +6,9 @@
 #define MAX_NAME_LEN 50
 #define MAX_EMAIL_LEN 50
 #define HASH_TABLE_SIZE 10007
+#define MAX_CHATS 100000 
+#define MAX_MESSAGES 50
+#define MAX_MES_LEN 256
 
 typedef struct {
     int user_id;
@@ -20,8 +23,20 @@ typedef struct {
 } Post;
 
 typedef struct {
-    // add attributes
+    int message_id;
+    User* sender;
+    User* receiver;
+    char content[MAX_MES_LEN];
 } Message;
+
+typedef struct { //manage the actual chat between two users
+    User* user1;
+    User* user2;
+    Message* messages[MAX_MESSAGES];
+    int message_count;
+    int start; //head and tail of circular buffer
+    int end;
+} Chat;
 
 User* create_user(const char* name, const char* email); // int user_id is auto-generated to be unique
 void add_friend(User* user1, User* user2); // users user1 and user2 are now friends
