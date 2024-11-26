@@ -559,7 +559,7 @@ Chat* findChat(User* user1, User* user2){ //helper function to find chat between
     chatNode* current = chatTable[index];
     while(current){ //scroll through cursedly long linked list to find chat between those users
         if((current->chat->user1 == user1 && current->chat->user2 == user2) || (current->chat->user1 == user2 && current->chat->user2 == user1)){
-            return current->chat;
+            return current->chat; //most definitely not ideal in terms of time complexity
         }
         current = current->next;
     }
@@ -596,8 +596,63 @@ Chat* findChat(User* user1, User* user2){ //helper function to find chat between
     return new_chat;
 }
 
-
+void add_message(Chat* chat, Message* message){ //helper function to add messages to the circular buffer
+    if(chat ==NULL||message == NULL){
+        printf("Chat or message does not exist\n");
+        return;
+    }
+    if(chat->message_count < MAX_MESSAGES){ //if sub-50 messages in chat, simply add to chat
+        chat->messages[chat->end]=message;
+        chat->end = (chat->end +1) % MAX_MESSAGES;
+        chat->message_count++;
+    }
+    else{
+        free(chat->messages[chat->start]); //delete oldest message to make space for new
+        chat->messages[chat->end]=message;
+        chat->end = (chat->end+1) % MAX_MESSAGES;
+        chat->start = (chat->start+1) % MAX_MESSAGES;
+    }
+}
 
 Message* create_message(User* sender, User* receiver, const char* content){
+    if(sender==NULL || receiver==NULL || content==NULL){
+        printf("Sender/receiver/content does not exist\n");
+        return NULL;
+    }
+
+    if(sender == receiver){
+        printf("Sender and receiver cannto be the same\n");
+        return NULL;
+    }
+
+    int are_friends = 0;
+    for(int i = 0; i < sender->friend_count; i++){ //verify friendship first
+        if(sender->friends[i] == receiver){
+            are_friends = 1;
+            break;
+        }
+    }
+    if(strlen(content) >= MAX_MES_LEN){
+        printf("Message exceeds maximum length\n");
+        return NULL;
+    }
     
+    Message* new_message = (Message*)malloc(sizeof(Message));
+    if(new_message == NULL){
+        printf("Memory allocation failed\n");
+        return NULL;
+    }
+    new_message->message_id = next_message_id++;
+    new_message->sender = sender;
+    new_message->receiver = receiver;
+    strncpy(new_message->content, content, MAX_MES_LEN-1);
+    new_message->content[MAX_MES_LEN-1] = '\0';
+    Chat* chat = findChat(sender, receiver);
+    if(chat == NULL){
+        free(new_message);
+        return NULL;
+    }
+
+    add_message(chat, new_message);
+    return new_message;
 }
