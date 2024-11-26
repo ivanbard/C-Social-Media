@@ -653,6 +653,43 @@ Message* create_message(User* sender, User* receiver, const char* content){
         return NULL;
     }
 
-    add_message(chat, new_message);
+    add_message(chat, new_message); //add prints for debugging?
     return new_message;
+}
+
+void print_message(Message* message){
+    if(message ==NULL){
+        printf("Message does not exist\n");
+        return;
+    }
+    printf("[%s:]", message->sender->name);
+    printf("%s", message->content);
+}
+
+void display_chat(User* user1, User* user2){
+    if(user1 == NULL || user2 == NULL){
+        printf("One or both users do not exist\n");
+        return;
+    }
+    Chat* chat = findChat(user1, user2);
+    if(chat == NULL){
+        printf("Chat does not exist\n");
+        return;
+    }
+
+    if(chat->message_count == 0){
+        printf("No messages in chat\n");
+        return;
+    }
+
+    int index = chat->start;
+    for(int i=0; i<chat->message_count; i++){
+        Message* msg = chat->messages[index];
+        print_message(msg);
+        if(i<chat->message_count-1){
+            printf(",");
+        }
+        index = (index + 1) % MAX_MESSAGES;
+    }
+    printf("\n");
 }
