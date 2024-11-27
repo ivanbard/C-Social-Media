@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "functions.h"
+#include <stdbool.h>
 
 #define MAX_USERS 10000
 #define MAX_NAME_LEN 50
@@ -31,6 +32,7 @@ int next_user_id = 1;
 Chat* chats[MAX_CHATS];
 int chat_count = 0;
 int next_message_id = 1;
+int next_post_id = 1;
 
 // Utility function to test parser
 void testingParser(int arg1, char *arg2) {
@@ -692,4 +694,56 @@ void display_chat(User* user1, User* user2){
         index = (index + 1) % MAX_MESSAGES;
     }
     printf("\n");
+}
+
+//since max posts per user isnt specified, have to make dynamic arrayt resizable if needed(helper if needed, cut out if post max is specified)
+bool resizePosts(User* user){
+    if (user==NULL){
+        printf("User does not exist\n");
+        return false;
+    }
+    int new = user->post_capacity*2; //just double it if needed
+    Post** temp = (Post**)realloc(user->posts, new*sizeof(Post*));
+    if(temp==NULL){
+        printf("Memory allocation failed\n");
+        return false;   
+    }
+    user->posts = temp;
+    user->post_capacity = new;
+    return true;
+}
+
+Post* new_post(User* user, const char* content){
+    if(user ==NULL){
+        printf("User does not exist\n");
+        return NULL;
+    }
+    if(content==NULL){
+        printf("Content does not exist\n");
+        return NULL;
+    }
+    if(strlen(content) >= MAX_POST_LEN){
+        printf("Post exceeds maximum length\n");
+        return NULL;
+    }
+
+    Post* new_post = (Post*)malloc(sizeof(Post));
+    if(new_post == NULL){
+        printf("Memory allocation failed\n");
+        return NULL;
+    }
+    new_post->post_id = next_post_id++;
+    new_post->creator = user;
+    new_post->like_count = 0;
+    strncpy(new_post->content, content, MAX_POST_LEN-1);
+    new_post->content[MAX_POST_LEN-1] = '\0';
+
+    if(user->post_count >= user->post_capacity){
+        if(!resizePosts(user)){
+            free(new_post);
+            return NULL;
+        }
+    }
+    user->posts[user->post_count++] = new_post; //add post to users posts array after necessary array resizing+increment user post count
+    return new_post;
 }

@@ -9,6 +9,7 @@
 #define MAX_CHATS 100000 
 #define MAX_MESSAGES 50
 #define MAX_MES_LEN 256
+#define MAX_POST_LEN 256
 
 typedef struct {
     int user_id;
@@ -16,10 +17,17 @@ typedef struct {
     char email[MAX_EMAIL_LEN];
     struct User* friends[MAX_USERS]; //see if changing to to linked lists would help memory out later
     int friend_count;
+    //stuff for posts for each user
+    Post** posts; //array of pointers to posts
+    int post_count; 
+    int post_capacity;
 } User;
 
 typedef struct {
-    // add attributes
+    int post_id;
+    User* creator;
+    int like_count;
+    char content[MAX_POST_LEN];
 } Post;
 
 typedef struct {
