@@ -20,4 +20,5 @@ CMakeFiles/assignment.dir/functions.c.obj: \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/mm_malloc.h \
  C:/msys64/ucrt64/include/errno.h C:/msys64/ucrt64/include/string.h \
  C:/msys64/ucrt64/include/sec_api/string_s.h \
- C:\Users\user\projects\278assignment\ASSIGNMENT\ 2024\functions.h
+ C:\Users\user\projects\278assignment\ASSIGNMENT\ 2024\functions.h \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/stdbool.h

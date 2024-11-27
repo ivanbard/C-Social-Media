@@ -152,6 +152,16 @@ User* create_user(const char* name, const char* email){
         new_user->friends[i] = NULL; //make sure new users friends list is empty
     }
 
+    //for postst
+    new_user->post_capacity = 10;
+    new_user->post_count = 0;
+    new_user->posts = (Post**)malloc(new_user->post_capacity * sizeof(Post*));
+    if(new_user->posts == NULL){
+        printf("Memory allocation failed for user's posts.\n");
+        free(new_user);
+        return NULL;
+    }
+
     insert(nameTable, new_user, name); //store new users details in the hash tables
     insert(emailTable, new_user, email); 
     users[user_count++] = new_user; //add the new user to the global array and add new spot in array for them
@@ -705,7 +715,7 @@ bool resizePosts(User* user){
     int new = user->post_capacity*2; //just double it if needed
     Post** temp = (Post**)realloc(user->posts, new*sizeof(Post*));
     if(temp==NULL){
-        printf("Memory allocation failed\n");
+        printf("Memory allocation failedx\n");
         return false;   
     }
     user->posts = temp;
@@ -797,6 +807,74 @@ void add_like(Post* post, User* user){
     post->likes[post->like_count++] = user_id;
 }
 
+int compare_posts(const void* a, const void* b){
+    Post* A=*(Post**)a;
+    Post* B=*(Post**)b;
+
+    if(A->like_count < B->like_count){ //compare by most likes first
+        return 1;
+    } else if(A->like_count > B->like_count){
+        return -1;
+    } else{
+        if(A->post_id < B->post_id){ //compare by post id(older post->higher id) second
+            return -1;
+        } else if(A->post_id > B->post_id){
+            return 1;
+        } else{
+            return 0;
+        }
+    }
+}
+
+void add_post(Post*** feed, int* count, int* capacity, Post* post) {
+    if (*count >= *capacity) {
+        *capacity *= 2;
+        Post** temp = (Post**)realloc(*feed, *capacity * sizeof(Post*));
+        if (temp == NULL) {
+            printf("Memory allocation failed\n");
+            return;
+        }
+        *feed = temp;
+    }
+    (*feed)[(*count)++] = post;
+}
+
 void display_feed(User* user1){
-    
+    if(user1 == NULL){
+        printf("User does not exist\n");
+        return;
+    }
+    int capacity = 100; //what is the limit on posts to be obtained, if only 20 to be displayed? 100 for now
+    int count = 0;
+    Post** feed = (Post**)malloc(capacity*sizeof(Post*));
+    if(feed == NULL){
+        printf("Memory allocation failed\n");
+        return;
+    }
+
+    for(int i = 0; i < user1->post_count; i++){
+        add_post(&feed, &count, &capacity, user1->posts[i]); //users posts
+    }
+    for(int i = 0; i < user1->friend_count; i++){
+        User* friend_user = user1->friends[i];
+        if(friend_user != NULL){
+            for(int j = 0; j < friend_user->post_count; j++){
+                add_post(&feed, &count, &capacity, friend_user->posts[j]); //users firedns posts
+            }
+        }
+    }
+
+    qsort(feed, count, sizeof(Post*), compare_posts);
+    int feed_size = (count < 20) ? count : 20; //hard limit to 20
+
+    for(int i =0; i<feed_size; i++){
+        Post* current_post = feed[i];
+        printf("[%s:]", current_post->creator->name);
+        printf("%s", current_post->content);
+        if(i<feed_size-1){
+            printf(",");
+        }
+    }
+    printf("\n");
+    free(feed);
 }

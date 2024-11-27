@@ -131,13 +131,13 @@ void callFunction(char *funcName, char **args, int argCount) {
         }
     } 
 
-    // else if (strcmp(funcName, "display_feed") == 0) {
-    //     if (argCount >= 1) {
-    //         display_feed(search_user_by_name(args[0]));
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "display_feed") == 0) {
+        if (argCount >= 1) {
+            display_feed(search_user_by_name(args[0]));
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
     else {
         printf("Unknown function: %s\n", funcName);
