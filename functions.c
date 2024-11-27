@@ -744,6 +744,59 @@ Post* new_post(User* user, const char* content){
             return NULL;
         }
     }
+    //stuff for initializing the likes array when a post is created
+    new_post->like_capacity = 10; //what is the limit on likes given?? if its small can i just leave it to not be resized, 10 for now
+    new_post->like_count = 0;
+    new_post->likes = (int*)malloc(new_post->like_capacity*sizeof(int));
+    if(new_post->likes == NULL){
+        printf("Memory allocation failed\n");
+        free(new_post);
+        return NULL;
+    }
+
     user->posts[user->post_count++] = new_post; //add post to users posts array after necessary array resizing+increment user post count
     return new_post;
+}
+
+bool resizeLikes(Post* post){ //see if this will still be needed if like count is limited
+    int new = post->like_capacity*2;
+    int* temp = realloc(post->likes, new*sizeof(int));
+    if(temp == NULL){
+        printf("Memory allocation failed\n");
+        return false;
+    }
+    post->likes = temp;
+    post->like_capacity = new;
+    return true;
+}
+
+void add_like(Post* post, User* user){
+    if(post == NULL || user == NULL){
+        printf("Post or user does not exist\n");
+        return;
+    }
+    int user_id = user->user_id;
+
+    bool has_liked = false;
+    for(int i = 0; i <post->like_count; i++){
+        if(post->likes[i]==user_id){
+            has_liked = true;
+            break; //break if x user has already liked the post
+        }
+    }
+    if(has_liked){
+        printf("User has already liked this post\n");
+        return;
+    }
+
+    if(post->like_count >= post->like_capacity){
+        if(!resizeLikes(post)){
+            return; //failed to resize of not needed, just continue
+        }
+    }
+    post->likes[post->like_count++] = user_id;
+}
+
+void display_feed(User* user1){
+    
 }

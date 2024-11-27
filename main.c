@@ -123,13 +123,13 @@ void callFunction(char *funcName, char **args, int argCount) {
         }
     } 
 
-    // else if (strcmp(funcName, "new_post") == 0) {
-    //     if (argCount >= 2) {
-    //         new_post(search_user_by_name(args[0]), args[1]);
-    //     } else {
-    //         printf("Invalid arguments for %s\n", funcName);
-    //     }
-    // } 
+    else if (strcmp(funcName, "new_post") == 0) {
+        if (argCount >= 2) {
+            new_post(search_user_by_name(args[0]), args[1]);
+        } else {
+            printf("Invalid arguments for %s\n", funcName);
+        }
+    } 
 
     // else if (strcmp(funcName, "display_feed") == 0) {
     //     if (argCount >= 1) {

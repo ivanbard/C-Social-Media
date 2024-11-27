@@ -28,6 +28,9 @@ typedef struct {
     User* creator;
     int like_count;
     char content[MAX_POST_LEN];
+    //stuff for likes
+    int like_capacity;
+    int* likes;
 } Post;
 
 typedef struct {
