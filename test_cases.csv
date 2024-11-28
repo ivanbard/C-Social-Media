@@ -24,7 +24,7 @@ create_message,Gavin,Andrew,Hello
 create_message,Andrew,Gavin,Hello back
 display_chat,Andrew,Gavin,
 new_post,Andrew,This is the end,
-new_post,Yahya,Hold your breath ,
+new_post,Yahya,Hold your breath,
 new_post,Gavin,and count to ten,
 new_post,Amara,and then,
 new_post,Yahya,Feel the Earth move,
