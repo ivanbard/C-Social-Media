@@ -116,27 +116,7 @@ User* search_user_by_email(const char* email){
 }
 
 User* create_user(const char* name, const char* email){
-    if(user_count >= MAX_USERS){
-        printf("Error! Max number of users reached.\n");
-        return NULL;
-    }
-
-    if(strlen(name) >= MAX_NAME_LEN || strlen(email) >= MAX_EMAIL_LEN){
-        printf("Error! Name or Email exceeds maximum length.\n");
-        return NULL;
-    }
-
-    if(search_user_by_name(name)){
-        printf("Error! Name '%s' is taken.\n", name);
-        return NULL;
-    }
-
-    if(search_user_by_email(email)){
-        printf("Error! Email '%s' is taken.\n", email);
-        return NULL;
-    }
-
-    User* new_user = (User*)malloc(sizeof(User));
+    User* new_user=(User*)malloc(sizeof(User));
     if (new_user == NULL){
         printf("Memory allocation failed.\n");
         return NULL;
@@ -166,54 +146,17 @@ User* create_user(const char* name, const char* email){
     insert(emailTable, new_user, email); 
     users[user_count++] = new_user; //add the new user to the global array and add new spot in array for them
 
-    printf("User created: ID=%d, Name=%s, Email=%s\n", new_user->user_id, new_user->name, new_user->email);
+    //printf("User created: id=%d, name=%s, email=%s\n", new_user->user_id, new_user->name, new_user->email);
     return new_user;
 }
 
 void add_friend(User* user1, User* user2){
-    if(user1 == NULL || user2 == NULL){
-        printf("One or both users do not exist\n");
-        return;
-    }
-
-    if(user1==user2){
-        printf("User cannot add oneself\n");
-        return;
-    }
-
-    for(int i = 0; i< user1->friend_count; i++){//check if users are already firends
-        if(user1->friends[i] == user2){
-            printf("Users are already friends\n");
-            return;
-        }
-    }
-
-    if(user1->friend_count >= MAX_USERS){
-        printf("User '%s' friends list is full\n", user1->name);
-        return;
-    }
-
-    if(user2->friend_count >= MAX_USERS){
-        printf("User '%s' friends list is full\n", user2->name);
-        return;
-    }
-
     user1->friends[user1->friend_count++] = user2;
     user2->friends[user2->friend_count++] = user1;
-    printf("'%s' and '%s' are now friends\n", user1->name, user2->name);
+    //printf("'%s' and '%s' are  friends\n", user1->name, user2->name);
 }
 
 void delete_friend(User* user1, User* user2){
-    if(user1 == NULL || user2 == NULL){
-        printf("One or both users do not exist\n");
-        return;
-    }
-
-    if(user1==user2){
-        printf("User cannot delete oneself\n");
-        return;
-    }
-
     //check if users are actually friends prior to deletion
     int is_friend = 0;
     for (int i = 0; i < user1->friend_count; i++) {
@@ -240,7 +183,7 @@ void delete_friend(User* user1, User* user2){
 
     if(index != -1){
         for (int i = index; i < user1->friend_count - 1; i++) {
-            user1->friends[i] = user1->friends[i + 1];
+            user1->friends[i] =user1->friends[i + 1];
         }
         user1->friends[user1->friend_count - 1] = NULL;
         user1->friend_count--;//clear last pointer and reduce friend count of user1
@@ -257,28 +200,23 @@ void delete_friend(User* user1, User* user2){
 
     if (index != -1) {
         for (int i = index; i < user2->friend_count - 1; i++) {//shifts elements of array to left to close gap
-            user2->friends[i] = user2->friends[i + 1];
+            user2->friends[i] =user2->friends[i + 1];
         }
         user2->friends[user2->friend_count - 1] = NULL;
         user2->friend_count--;//clear last pointer and reduce friend count of user2
     }
 
-    printf("'%s' and '%s' are no longer friends\n", user1->name, user2->name);
+    //printf("'%s' and '%s' are no longer friends\n", user1->name, user2->name);
 }
 
 void delete_user(User* user){
-    if(user == NULL){
-        printf("User does not exist\n");
-        return;
-    }
-
     //find user in everyones friends lists and delete them from it
     for(int i = 0; i < user->friend_count; i++){
         User* friend_user = user->friends[i];
         
         int index = -1;
         for(int j = 0; j <friend_user->friend_count;j++){
-            if(friend_user->friends[j] == user){
+            if(friend_user-> friends[j] == user){
                 index = j;
                 break;
             }
@@ -343,13 +281,13 @@ void delete_user(User* user){
 
     if(index != -1){
         for(int i = index; i < user_count - 1; i++){
-            users[i] = users[i+1];
+            users[i] =users[i+1];
         }
         users[user_count - 1] = NULL;
         user_count--;
     }
 
-    printf("'%s' is no longer a user\n", user->name);
+    //printf("'%s' is no longer a user\n", user->name);
     free(user); //free pointer taken up by deleted user
 }
 
@@ -361,11 +299,6 @@ int compareUsers(const void* a, const void* b){
 }
 
 void print_users(){
-    if(user_count == 0){
-        printf("No users exist\n");
-        return;
-    }
-
     User** sorted = (User**)malloc(user_count * sizeof(User*));
     if(sorted == NULL){
         printf("Memory allocation failed\n");
@@ -386,21 +319,6 @@ void print_users(){
 }
 
 void change_user_name(User* user, char* new_name){
-    if(user == NULL || new_name == NULL){
-        printf("Error! User or new name do not exist\n");
-        return;
-    }
-
-    if(strlen(new_name) >= MAX_NAME_LEN){
-        printf("Error! New name exceeds length limit\n");
-        return;
-    }
-
-    if(search_user_by_name(new_name)){
-        printf("Error! '%s' is already taken\n", new_name);
-        return;
-    }
-
     unsigned int oldNameIndex = hashFunc(user->name);
     Node* current = nameTable[oldNameIndex];
     Node* prev = NULL;
@@ -411,7 +329,7 @@ void change_user_name(User* user, char* new_name){
                 prev->next = current->next;
             }
             else{
-                nameTable[oldNameIndex] = current->next;
+                nameTable[oldNameIndex]= current->next;
             }
             free(current);
             break;
@@ -424,25 +342,10 @@ void change_user_name(User* user, char* new_name){
     user->name[MAX_NAME_LEN - 1] = '\0';
     insert(nameTable, user, new_name);
 
-    printf("User changed their name to '%s'\n", user->name);
+    //printf("User changed their name to '%s'\n", user->name);
 }
 
 void change_user_email(User* user, char* new_email){
-    if(user == NULL || new_email == NULL){
-        printf("Error! User or new email do not exist\n");
-        return;
-    }
-
-    if(strlen(new_email) >= MAX_EMAIL_LEN){
-        printf("Error! New email exceeds length limit\n");
-        return;
-    }
-
-    if(search_user_by_email(new_email)){
-        printf("Error! '%s' is already taken\n", new_email);
-        return;
-    }
-
     unsigned int oldEmailIndex = hashFunc(user->email);
     Node* current = emailTable[oldEmailIndex];
     Node* prev = NULL;    
@@ -453,7 +356,7 @@ void change_user_email(User* user, char* new_email){
                 prev->next = current->next;
             }
             else{
-                emailTable[oldEmailIndex] = current->next;
+                emailTable[oldEmailIndex]= current->next;
             }
             free(current);
             break;
@@ -466,20 +369,10 @@ void change_user_email(User* user, char* new_email){
     user->email[MAX_EMAIL_LEN - 1] = '\0';
     insert(emailTable, user, new_email);
 
-    printf("User changed their email to '%s'\n", user->email);
+    //printf("User changed their email to '%s'\n", user->email);
 }
 
 void print_friends(User* user){
-    if(user == NULL){
-        printf("Error! User does not exist\n");
-        return;
-    }
-
-    if(user->friend_count == 0){
-        printf("'%s' has no friends", user->name);
-        return;
-    }
-
     User** sorted = (User**)malloc(user->friend_count * sizeof(User*));
     if(sorted == NULL){
         printf("Memory allocation failed\n");
@@ -491,20 +384,15 @@ void print_friends(User* user){
     qsort(sorted, user->friend_count, sizeof(User*), compareUsers);
     for(int i = 0; i < user->friend_count; i++){
         printf("%s", sorted[i]->name);
-        if(i<user->friend_count - 1){
+        if(i<user->friend_count-1){
             printf(",");
         }
     }
     printf("\n");
-    free(sorted); //empty sorted array pointer for memory optimization
+    free(sorted);
 }
 
 User** mutual_friends(User* user1, User* user2){
-    if(user1 == NULL || user2 == NULL){
-        printf("One or both users do not exist\n");
-        return NULL;
-    }
-
     //find max amount of mutual friends to allocate array
     int maxFriends = (user1->friend_count < user2->friend_count) ? user1->friend_count : user2->friend_count;
     User** mutual = (User**)malloc((maxFriends + 1) * sizeof(User*));
@@ -517,7 +405,7 @@ User** mutual_friends(User* user1, User* user2){
     for(int i = 0; i < user1->friend_count; i++){
         User* friend1 = user1->friends[i]; //take x person on user 1 friends list
         for(int j = 0; j < user2->friend_count; j++){
-            if(user2->friends[j] == friend1){ //check if x person is also on user 2 friends list
+            if(user2->friends[j] ==friend1){ //check if x person is also on user 2 friends list
                 mutual[mutual_count++] = friend1; //if they are, add them to the mutual friends array
                 break;
             }
@@ -529,21 +417,10 @@ User** mutual_friends(User* user1, User* user2){
 }
 
 void print_mutual_friends(User** friends){
-    if(friends == NULL){
-        printf("No mutual friends\n");
-        return;
-    }
-
-    int count = 0;
+    int count=0;
     while(friends[count] != NULL){
         count++;
     }
-
-    if(count == 0){
-        printf("No mutual friends\n");
-        return;
-    }
-
     User** sorted = (User**)malloc(count * sizeof(User*));
     if (sorted==NULL){
         printf("Memory allocation failed\n");
@@ -563,10 +440,6 @@ void print_mutual_friends(User** friends){
 }
 
 Chat* findChat(User* user1, User* user2){ //helper function to find chat between x and y users
-    if(user1 == NULL || user2 == NULL){
-        printf("One or both users do not exist\n");
-        return NULL;
-    }
     unsigned int index = chatHashFunc(user1->user_id, user2->user_id);
     chatNode* current = chatTable[index];
     while(current){ //scroll through cursedly long linked list to find chat between those users
@@ -574,11 +447,6 @@ Chat* findChat(User* user1, User* user2){ //helper function to find chat between
             return current->chat; //most definitely not ideal in terms of time complexity
         }
         current = current->next;
-    }
-
-    if(chat_count > MAX_CHATS){
-        printf("Max number of chats reached\n");
-        return NULL;
     }
 
     Chat* new_chat = (Chat*)malloc(sizeof(Chat));
@@ -609,10 +477,6 @@ Chat* findChat(User* user1, User* user2){ //helper function to find chat between
 }
 
 void add_message(Chat* chat, Message* message){ //helper function to add messages to the circular buffer
-    if(chat ==NULL||message == NULL){
-        printf("Chat or message does not exist\n");
-        return;
-    }
     if(chat->message_count < MAX_MESSAGES){ //if sub-50 messages in chat, simply add to chat
         chat->messages[chat->end]=message;
         chat->end = (chat->end +1) % MAX_MESSAGES;
@@ -627,26 +491,12 @@ void add_message(Chat* chat, Message* message){ //helper function to add message
 }
 
 Message* create_message(User* sender, User* receiver, const char* content){
-    if(sender==NULL || receiver==NULL || content==NULL){
-        printf("Sender/receiver/content does not exist\n");
-        return NULL;
-    }
-
-    if(sender == receiver){
-        printf("Sender and receiver cannto be the same\n");
-        return NULL;
-    }
-
-    int are_friends = 0;
+    int are_friends=0;
     for(int i = 0; i < sender->friend_count; i++){ //verify friendship first
-        if(sender->friends[i] == receiver){
+        if(sender->friends[i]  == receiver){
             are_friends = 1;
             break;
         }
-    }
-    if(strlen(content) >= MAX_MES_LEN){
-        printf("Message exceeds maximum length\n");
-        return NULL;
     }
     
     Message* new_message = (Message*)malloc(sizeof(Message));
@@ -670,27 +520,14 @@ Message* create_message(User* sender, User* receiver, const char* content){
 }
 
 void print_message(Message* message){
-    if(message ==NULL){
-        printf("Message does not exist\n");
-        return;
-    }
-    printf("[%s:]", message->sender->name);
-    printf("%s", message->content);
+    printf("[%s:]",message->sender->name);
+    printf("%s",message->content);
 }
 
 void display_chat(User* user1, User* user2){
-    if(user1 == NULL || user2 == NULL){
-        printf("One or both users do not exist\n");
-        return;
-    }
     Chat* chat = findChat(user1, user2);
     if(chat == NULL){
         printf("Chat does not exist\n");
-        return;
-    }
-
-    if(chat->message_count == 0){
-        printf("No messages in chat\n");
         return;
     }
 
@@ -708,35 +545,18 @@ void display_chat(User* user1, User* user2){
 
 //since max posts per user isnt specified, have to make dynamic arrayt resizable if needed(helper if needed, cut out if post max is specified)
 bool resizePosts(User* user){
-    if (user==NULL){
-        printf("User does not exist\n");
-        return false;
-    }
     int new = user->post_capacity*2; //just double it if needed
     Post** temp = (Post**)realloc(user->posts, new*sizeof(Post*));
     if(temp==NULL){
         printf("Memory allocation failedx\n");
         return false;   
     }
-    user->posts = temp;
+    user->posts =temp;
     user->post_capacity = new;
     return true;
 }
 
 Post* new_post(User* user, const char* content){
-    if(user ==NULL){
-        printf("User does not exist\n");
-        return NULL;
-    }
-    if(content==NULL){
-        printf("Content does not exist\n");
-        return NULL;
-    }
-    if(strlen(content) >= MAX_POST_LEN){
-        printf("Post exceeds maximum length\n");
-        return NULL;
-    }
-
     Post* new_post = (Post*)malloc(sizeof(Post));
     if(new_post == NULL){
         printf("Memory allocation failed\n");
@@ -781,10 +601,6 @@ bool resizeLikes(Post* post){ //see if this will still be needed if like count i
 }
 
 void add_like(Post* post, User* user){
-    if(post == NULL || user == NULL){
-        printf("Post or user does not exist\n");
-        return;
-    }
     int user_id = user->user_id;
 
     bool has_liked = false;
@@ -834,16 +650,12 @@ void add_post(Post*** feed, int* count, int* capacity, Post* post) {
             printf("Memory allocation failed\n");
             return;
         }
-        *feed = temp;
+        *feed =temp;
     }
     (*feed)[(*count)++] = post;
 }
 
 void display_feed(User* user1){
-    if(user1 == NULL){
-        printf("User does not exist\n");
-        return;
-    }
     int capacity = 100; //what is the limit on posts to be obtained, if only 20 to be displayed? 100 for now
     int count = 0;
     Post** feed = (Post**)malloc(capacity*sizeof(Post*));
@@ -855,7 +667,7 @@ void display_feed(User* user1){
     for(int i = 0; i < user1->post_count; i++){
         add_post(&feed, &count, &capacity, user1->posts[i]); //users posts
     }
-    for(int i = 0; i < user1->friend_count; i++){
+    for(int i=0; i < user1->friend_count; i++){
         User* friend_user = user1->friends[i];
         if(friend_user != NULL){
             for(int j = 0; j < friend_user->post_count; j++){
@@ -869,7 +681,7 @@ void display_feed(User* user1){
 
     for(int i =0; i<feed_size; i++){
         Post* current_post = feed[i];
-        printf("[%s:]", current_post->creator->name);
+        printf("[%s:]",current_post->creator->name);
         printf("%s", current_post->content);
         if(i<feed_size-1){
             printf(",");
